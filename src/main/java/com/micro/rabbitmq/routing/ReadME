@@ -1,0 +1,44 @@
+Exchange（交换机  转发器）
+一方面接收生产者的消息，另一方面向队列推送消息
+匿名转发 ""
+Fanout(不处理路由键)
+direct
+
+routing路由模式
+
+----------------------------------------------
+topic主题模式
+Topic exchange
+将路由键与某模式匹配
+# 匹配一个或者多个
+* 匹配一个
+Goods.#
+商品：新增  删除  修改  查询
+
+----------------------------------------------
+Rabbitmq的消息确认机制（事务+confirm）
+在rabbitmq中 我们可以通过持久化数据 解决rabbitmq服务器异常 的数据丢失问题
+问题：生产者将消息发送出去之后，消息到底有没有到达 rabbitmq 服务器  默认的情况是不知道的
+
+两种方式：
+    AMQP实现了事务机制
+    Confirm模式
+
+事务机制：(影响吞吐量)
+txSelect  txCommit  txRollback
+txSelect用户将 channel 模式设置为 transaction 模式
+txCommit用于提交事务
+txRollback用于回滚事务
+
+----------------------------------------------
+生产者端confirm模式的实现原理
+Confirm 模式最大的好处在于它是异步
+Nack
+
+开启confirm模式
+channel.confirmSelect()
+
+编程模式;
+1.普通 发一条 waitForConfirms()
+2.批量 发一批 waitForConfirms
+3.异步 confirm 模式，提供一个回调方法

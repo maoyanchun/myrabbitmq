@@ -1,0 +1,11 @@
+生产者端confirm模式的实现原理
+Confirm 模式最大的好处在于它是异步
+Nack
+
+开启confirm模式
+channel.confirmSelect()
+
+编程模式;
+1.普通 发一条 waitForConfirms()
+2.批量 发一批 waitForConfirms
+3.异步 confirm 模式，提供一个回调方法

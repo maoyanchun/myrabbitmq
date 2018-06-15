@@ -1,0 +1,37 @@
+公平分发
+使用公平分发必须关闭自动应答ack，改成手动
+
+消息应答
+boolean autoAck = false;//关闭自动应答
+channel.basicConsume(QUEUE_NAME, autoAck, consumer);
+
+boolean autoAck = true;(自动确认模式) 一旦rabbitmq将消息分发给消费者，就会从内存中删除
+这种情况下，如果杀死正在执行的消费者，就会丢失正在处理的消息
+
+boolean autoAck = false;(手动模式)，如果有一个消费者挂掉，就会交付给其它消费者
+rabbitmq支持消息应答，消费者发送一个消息应答,告诉rabbitmq这个消息我已经处理完成 你可以删了，然后rabbitmq就删除内存中的消息
+
+消息应答默认是打开的，false
+Message acknowkedgment
+
+如果rabbitmq挂了，消息仍然会丢失！！！
+
+
+消息的持久化
+//声明队列
+boolean durable = false;
+channel.queueDeclare(QUEUE_NAME, durable, false, false, null);
+将程序中的boolean durable = false;改为true；是不可以的！因为我们已经定义了一个叫test_work_queue，这个queue是未持久化
+rabbitmq不准许重新定义（不同参数）一个已存在的队列
+
+---------------------------------------------------------------------
+订阅模式
+         |---queue---c1
+p---x--- |
+         |---queue---c2
+
+1.一个生产者，多个消费者
+2.每一个消费者都有自己的队列
+3.生产者没有直接把消息发送到队列，而是发到了交换机，转发器exchange
+4.每个队列都要绑定到交换机上
+5.生产者发送的消息 经过交换机 到达队列 就能实现 一个消息被多个消费者消费
